@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}
+{%block title %}My Items{% endblock %}
+{% block content %}    
+<ul>
+        {% for item in myitems %}
+            <li>{{item}}</li>
+        {% endfor %}
+        
+    </ul>
+
+{% endblock %}
