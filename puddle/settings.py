@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     #app created by us
     'core',
     'item',
-    'myitems',]
+    'myitems',
+    'Dashboard',
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
