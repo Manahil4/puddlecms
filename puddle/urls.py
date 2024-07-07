@@ -19,6 +19,5 @@ urlpatterns = [
     # Example: http://www.example.com/admin/
     path('admin/', admin.site.urls),
     path('Dashboard/', include('Dashboard.urls')),
-    path('myitems/', include("myitems.urls") ),
     path('item/', include('item.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
