@@ -47,8 +47,13 @@
     <div>
         <a href="{% url 'item:detail' item.id %}">
             <div>
-                <img src="{{ item.image.url }}" class="rounded-xl" >
-            </div>
+                
+                {% if item.image %}    
+                    <img src="{{ item.image.url }}" class="rounded-xl" >
+                {% else %}
+                    <img src="item_images\not available pic.avif" alt="PIC NOT available">    
+                {% endif %}
+                </div>
             <div class="p-6 bg-white rounded-xl">
                 <h2 class="text-2xl">{{ item.name }}</h2>
                 <p class="text-gray-400">Price={{ item.price }}</p>
