@@ -46,4 +46,9 @@ def logout_u(request):
     logout(request)
     messages.success(request,("You were LOGOUT!!!"))
     return redirect('core:index')
-        
+def cat(request):
+    items = Item.objects.filter(is_sold=False)[0:6]
+    categories=Category.objects.all()
+    return render(request, 'core/new&cat.html', {
+        'categories':categories,
+        'items':items,})
