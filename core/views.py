@@ -1,15 +1,24 @@
 from django.shortcuts import render, redirect
 from item.models import Category, Item
-from .forms import SignupForm,LoginForm
+from .forms import SignupForm
 from django.contrib.auth import logout
 from django.contrib import messages
+from django.core.paginator import Paginator
+
 # Create your views here.
 def index(request):
-    items = Item.objects.filter(is_sold=False)[0:6]
-    categories=Category.objects.all()
-    return render(request, 'core/index.html', {
-        'categories':categories,
-        'items':items,})
+    item_list = Item.objects.all()
+    category_list = Category.objects.all()
+    paginator = Paginator(item_list, 6)  # Show 6 items per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'items': page_obj,
+        'categories': category_list,
+    }
+    return render(request, 'core/index.html', context)
 def contact(request):
     return render(request, 'core/contact.html')
 
@@ -47,8 +56,15 @@ def logout_u(request):
     messages.success(request,("You were LOGOUT!!!"))
     return redirect('core:index')
 def cat(request):
-    items = Item.objects.filter(is_sold=False)[0:6]
-    categories=Category.objects.all()
-    return render(request, 'core/new&cat.html', {
-        'categories':categories,
-        'items':items,})
+    item_list = Item.objects.all()
+    category_list = Category.objects.all()
+    paginator = Paginator(item_list, 6)  # Show 6 items per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'items': page_obj,
+        'categories': category_list,
+    }
+    return render(request, 'core/new&cat.html', context)
