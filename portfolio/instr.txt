@@ -1,0 +1,183 @@
+To achieve this, you can follow these steps:
+
+1. **Add a field to filter users as designers or regular users.**
+2. **Update the signup form to include this field.**
+3. **Create a view to handle designer portfolio creation separately.**
+4. **Modify the templates to include the designer selection and portfolio creation.**
+
+### Step 1: Update User Model (Custom User Model)
+You need to extend the default `User` model to include a field indicating whether the user is a designer.
+
+```python
+# models.py
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+class CustomUser(AbstractUser):
+    is_designer = models.BooleanField(default=False)
+```
+
+### Step 2: Update Signup Form
+
+```python
+# forms.py
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from .models import CustomUser
+from .models import DesignerProfile
+
+class SignupForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'password1', 'password2', 'is_designer')
+
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder': 'Your Username',
+        'class': 'w-full py-4 px-6 rounded-xl'
+    }))
+    
+    email = forms.CharField(widget=forms.EmailInput(attrs={
+        'placeholder': 'Email',
+        'class': 'w-full py-4 px-6 rounded-xl'
+    }))
+    
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder': 'Password',
+        'class': 'w-full py-4 px-6 rounded-xl'
+    }))
+    
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder': 'Repeat Password',
+        'class': 'w-full py-4 px-6 rounded-xl'
+    }))
+    
+    is_designer = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={
+        'class': 'rounded-xl'
+    }))
+
+class DesignerProfileForm(forms.ModelForm):
+    class Meta:
+        model = DesignerProfile
+        fields = ['bio', 'previous_work', 'education', 'portfolio_image']
+```
+
+### Step 3: Create Views for Portfolio Creation
+
+```python
+# views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import SignupForm, DesignerProfileForm
+from .models import DesignerProfile, CustomUser
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        
+        if form.is_valid():
+            user = form.save()
+            
+            if user.is_designer:
+                return redirect('core:create_or_update_profile')
+            
+            return redirect('core:login')
+        
+    else:
+        form = SignupForm()
+    
+    return render(request, 'core/signup.html', {'form': form})
+
+@login_required
+def create_or_update_profile(request):
+    try:
+        profile = DesignerProfile.objects.get(user=request.user)
+    except DesignerProfile.DoesNotExist:
+        profile = None
+
+    if request.method == 'POST':
+        form = DesignerProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+            return redirect('core:profile_view', profile_id=profile.id)
+    else:
+        form = DesignerProfileForm(instance=profile)
+    
+    return render(request, 'core/create_or_update_profile.html', {'form': form})
+
+def profile_view(request, profile_id):
+    profile = DesignerProfile.objects.get(id=profile_id)
+    return render(request, 'core/profile_view.html', {'profile': profile})
+```
+
+### Step 4: Update URLs
+
+```python
+# urls.py
+from django.urls import path
+from . import views
+from django.contrib.auth import views as auth_views
+
+app_name = 'core'
+
+urlpatterns = [
+    path("", views.index, name="index"),
+    path('new/', views.cat, name="new&cat"),
+    path('signup/', views.signup, name="signup"),
+    path('login/', auth_views.LoginView.as_view(template_name='core/login.html', authentication_form=LoginForm), name='login'),
+    path('logout/', views.logout_u, name="logout"),
+    path('profile/create-or-update/', views.create_or_update_profile, name='create_or_update_profile'),
+    path('profile/<int:profile_id>/', views.profile_view, name='profile_view'),
+]
+```
+
+### Step 5: Update Templates
+
+- **Signup Template (`signup.html`)**
+
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Signup</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Signup</button>
+  </form>
+{% endblock %}
+```
+
+- **Create or Update Profile Template (`create_or_update_profile.html`)**
+
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Create or Update Profile</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+  </form>
+{% endblock %}
+```
+
+- **Profile View Template (`profile_view.html`)**
+
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>{{ profile.user.username }}'s Profile</h2>
+  <p>{{ profile.bio }}</p>
+  <p>{{ profile.previous_work }}</p>
+  <p>{{ profile.education }}</p>
+  {% if profile.portfolio_image %}
+    <img src="{{ profile.portfolio_image.url }}" alt="Portfolio Image">
+  {% endif %}
+{% endblock %}
+```
+
+With these changes, the signup process will filter designers and redirect them to create a portfolio. Regular users will be redirected to the login page after signup. Designers can view and update their portfolios through separate views and URLs.

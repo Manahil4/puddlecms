@@ -1,10 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 
 {% block content %}
   <h2>Designer Portfolios</h2>
   {% for profile in profiles %}
     <div>
-      <h3><a href="{% url 'core:profile_view' profile.id %}">{{ profile.user.username }}</a></h3>
+      <h3><a href="{% url 'portfolio:profile_view' profile.id %}">{{ profile.user.username }}</a></h3>
       <p>{{ profile.bio|truncatewords:30 }}</p>
       {% if profile.portfolio_image %}
         <img src="#" alt="Portfolio Image" style="width:100px;height:100px;">

@@ -26,19 +26,19 @@
                     <a href="{% url 'Dashboard:index' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Dashboard</a>
                     <a href="{%url 'core:logout' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Log out</a>
           
-                    <a href="{% url 'core:create_or_update_profile' %}" class="btn btn-primary">Create/Update Profile</a>
-                    <a href="{% url 'core:home_profiles' %}" class="btn btn-secondary">View Designers</a>
+                    <a href="{% url 'portfolio:create_or_update_profile' %}" class="btn btn-primary">Create/Update Profile</a>
+                    <a href="{% url 'portfolio:designer_list' %}" class="btn btn-secondary">View Designers</a>
              
-                  
+                    <!-- Link to add an item, styled with a hover effect -->
+                    <a href="{% url 'item:new' %}" class="text-lg font-semibold px-6 py-3 bg-teal-500 rounded-xl hover:text-gray-500">ADD Item</a>
+                
                 {%else %}
                     <a href="{% url 'core:signup' %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Signup</a>
                 <!-- Link styled as a button for user login -->
                     <a href="{% url 'core:login' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Log in</a>
                 {% endif %}
                 
-                 <!-- Link to add an item, styled with a hover effect -->
-                 <a href="{% url 'item:new' %}" class="text-lg font-semibold px-6 py-3 bg-teal-500 rounded-xl hover:text-gray-500">ADD Item</a>
-                
+                 
             </div>
         </nav>
 

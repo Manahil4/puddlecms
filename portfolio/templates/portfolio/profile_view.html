@@ -1,10 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 
 {% block content %}
   <h2>{{ profile.user.username }}'s Profile</h2>
-  <p>{{ profile.bio }}</p>
+  <p>{{ profile.experience }}</p>
+  <p>{{ profile.specialization }}</p>
   <p>{{ profile.previous_work }}</p>
   <p>{{ profile.education }}</p>
+  
+  <p>{{ profile.bio }}</p>
   {% if profile.portfolio_image %}
     <img src="#" alt="Portfolio Image">
   {% endif %}

@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
-from .models import DesignerProfile
+from core.models import CustomUser  # Update this import to your custom user model
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
@@ -15,8 +14,9 @@ class LoginForm(AuthenticationForm):
 
 class SignupForm(UserCreationForm):
     class Meta:
-        model=User
-        fields = ('username','email','password1','password2')
+        model= CustomUser
+        fields = ('username','email','password1','password2', 'is_designer')
+
     
     username = forms.CharField(widget=forms.TextInput(attrs={
         'placeholder':'Your Username',
@@ -36,24 +36,5 @@ class SignupForm(UserCreationForm):
         'placeholder':'Repeat Password',
         'class':'w-full py-4 px-6 rounded-xl'}))
     
-
-class DesignerProfileForm(forms.ModelForm):
-    class Meta:
-        model = DesignerProfile
-        fields = ['bio', 'previous_work', 'education', 'portfolio_image']
+    is_designer = forms.BooleanField(required=False, label="Are you a designer?")
     
-    bio = forms.CharField(widget=forms.Textarea(attrs={
-        'placeholder': 'Your Bio',
-        'class': 'w-full py-4 px-6 rounded-xl'
-    }))
-    previous_work = forms.CharField(widget=forms.Textarea(attrs={
-        'placeholder': 'Your Previous Work',
-        'class': 'w-full py-4 px-6 rounded-xl'
-    }))
-    education = forms.CharField(widget=forms.Textarea(attrs={
-        'placeholder': 'Your Education',
-        'class': 'w-full py-4 px-6 rounded-xl'
-    }))
-    portfolio_image = forms.ImageField(required=False, widget=forms.FileInput(attrs={
-        'class': 'w-full py-4 px-6 rounded-xl'
-    }))

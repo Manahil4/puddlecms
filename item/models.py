@@ -1,5 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
+from core.models import CustomUser
+from django.conf import settings
+
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -17,7 +19,7 @@ class Item(models.Model):
     price = models.FloatField()
     is_sold = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User, related_name='items', on_delete = models.CASCADE)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='items', on_delete = models.CASCADE)
     image = models.ImageField(upload_to='item_images',blank=True,null=True)
     def __str__(self) :
         return self.name

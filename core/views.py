@@ -1,14 +1,11 @@
 from django.shortcuts import render, redirect
 from item.models import Category, Item
 from .forms import SignupForm
+from portfolio.forms import DesignerProfileForm
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.core.paginator import Paginator
 # views.py
-from django.contrib.auth.decorators import login_required
-
-from .forms import DesignerProfileForm
-from .models import DesignerProfile
 
 # Create your views here.
 def index(request):
@@ -27,20 +24,20 @@ def index(request):
 def contact(request):
     return render(request, 'core/contact.html')
 
-def signup(request):
-    if request.method == 'POST':
-        form = SignupForm(request.POST)
+# def signup(request):
+#     if request.method == 'POST':
+#         form = SignupForm(request.POST)
         
-        if form.is_valid():
-            form.save()
+#         if form.is_valid():
+#             form.save()
             
-            return redirect('/login/')
+#             return redirect('/login/')
         
-    else:
+#     else:
         
-        form = SignupForm()
-    return render(request, 'core/signup.html',{
-        'form': form})
+#         form = SignupForm()
+#     return render(request, 'core/signup.html',{
+#         'form': form})
 # def login_u(request):
 #     if request.method=="POST":
 #         username=request.POST['username']
@@ -74,30 +71,22 @@ def cat(request):
     }
     return render(request, 'core/new&cat.html', context)
 
-@login_required
-def create_or_update_profile(request):
-    try:
-        profile = DesignerProfile.objects.get(user=request.user)
-    except DesignerProfile.DoesNotExist:
-        profile = None
 
+
+def signup(request):
     if request.method == 'POST':
-        form = DesignerProfileForm(request.POST, request.FILES, instance=profile)
+        form = SignupForm(request.POST)
         if form.is_valid():
-            profile = form.save(commit=False)
-            profile.user = request.user
-            profile.save()
-            return redirect('profile_view', profile_id=profile.id)
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            
+            if user.is_designer:
+                return redirect("{%'url 'portfolio:portfolio_form'%}")
+            else:
+                return redirect('/login/')
     else:
-        form = DesignerProfileForm(instance=profile)
+        form = SignupForm()
     
-    return render(request, 'core/create_or_update_profile.html', {'form': form})
-
-def profile_view(request, profile_id):
-    profile = DesignerProfile.objects.get(id=profile_id)
-    return render(request, 'core/profile_view.html', {'profile': profile})
-
-def home(request):
-    profiles = DesignerProfile.objects.all()
-    return render(request, 'core/home_profiles.html', {'profiles': profiles})
+    return render(request, 'core/signup.html', {'form': form})
 
