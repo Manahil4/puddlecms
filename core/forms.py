@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from .models import DesignerProfile
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
@@ -34,3 +35,25 @@ class SignupForm(UserCreationForm):
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={
         'placeholder':'Repeat Password',
         'class':'w-full py-4 px-6 rounded-xl'}))
+    
+
+class DesignerProfileForm(forms.ModelForm):
+    class Meta:
+        model = DesignerProfile
+        fields = ['bio', 'previous_work', 'education', 'portfolio_image']
+    
+    bio = forms.CharField(widget=forms.Textarea(attrs={
+        'placeholder': 'Your Bio',
+        'class': 'w-full py-4 px-6 rounded-xl'
+    }))
+    previous_work = forms.CharField(widget=forms.Textarea(attrs={
+        'placeholder': 'Your Previous Work',
+        'class': 'w-full py-4 px-6 rounded-xl'
+    }))
+    education = forms.CharField(widget=forms.Textarea(attrs={
+        'placeholder': 'Your Education',
+        'class': 'w-full py-4 px-6 rounded-xl'
+    }))
+    portfolio_image = forms.ImageField(required=False, widget=forms.FileInput(attrs={
+        'class': 'w-full py-4 px-6 rounded-xl'
+    }))

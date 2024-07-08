@@ -4,6 +4,11 @@ from .forms import SignupForm
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.core.paginator import Paginator
+# views.py
+from django.contrib.auth.decorators import login_required
+
+from .forms import DesignerProfileForm
+from .models import DesignerProfile
 
 # Create your views here.
 def index(request):
@@ -68,3 +73,31 @@ def cat(request):
         'categories': category_list,
     }
     return render(request, 'core/new&cat.html', context)
+
+@login_required
+def create_or_update_profile(request):
+    try:
+        profile = DesignerProfile.objects.get(user=request.user)
+    except DesignerProfile.DoesNotExist:
+        profile = None
+
+    if request.method == 'POST':
+        form = DesignerProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+            return redirect('profile_view', profile_id=profile.id)
+    else:
+        form = DesignerProfileForm(instance=profile)
+    
+    return render(request, 'core/create_or_update_profile.html', {'form': form})
+
+def profile_view(request, profile_id):
+    profile = DesignerProfile.objects.get(id=profile_id)
+    return render(request, 'core/profile_view.html', {'profile': profile})
+
+def home(request):
+    profiles = DesignerProfile.objects.all()
+    return render(request, 'core/home_profiles.html', {'profiles': profiles})
+
