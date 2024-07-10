@@ -1,20 +1,16 @@
 from django.contrib import admin
-# core/admin.py
-from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 
 class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    list_display = ['username', 'email', 'is_designer']  # Customize display fields
+
     fieldsets = (
-        *UserAdmin.fieldsets,
-        (
-            'Role',
-            {
-                'fields': (
-                    'is_designer',
-                ),
-            },
-        ),
+        (None, {'fields': ('username', 'password')}),
+        ('Personal info', {'fields': ('email', 'is_designer')}),  # Include is_designer field
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
 
 admin.site.register(CustomUser, CustomUserAdmin)

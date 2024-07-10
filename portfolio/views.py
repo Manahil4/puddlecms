@@ -6,31 +6,31 @@ from .models import DesignerProfile
 from core.models import CustomUser  # Import CustomUser
 
 @login_required
-def create_or_update_profile(request):
-    try:
-        profile = DesignerProfile.objects.get(user=request.user)
-    except DesignerProfile.DoesNotExist:
-        profile = None
+def create_profile(request):
+    # Check if the user already has a portfolio
+    if DesignerProfile.objects.filter(user=request.user).exists():
+        # Redirect to profile view or any other page since the portfolio already exists
+        return redirect('portfolio/profile_view', profile_id=request.user.designerprofile.id)
 
     if request.method == 'POST':
-        form = DesignerProfileForm(request.POST, request.FILES, instance=profile)
+        form = DesignerProfileForm(request.POST, request.FILES)
         if form.is_valid():
             profile = form.save(commit=False)
             profile.user = request.user
             profile.save()
-            return redirect('profile_view', profile_id=profile.id)
+            return redirect('portfolio/profile_view', profile_id=profile.id)
     else:
-        form = DesignerProfileForm(instance=profile)
+        form = DesignerProfileForm()
     
-    return render(request, 'create_or_update_profile.html', {'form': form})
+    return render(request, 'portfolio/create_profile.html', {'form': form})
 
 def profile_view(request, profile_id):
     profile = DesignerProfile.objects.get(id=profile_id)
-    return render(request, 'profile_view.html', {'profile': profile})
+    return render(request, 'portfolio/profile_view.html', {'profile': profile})
 
 def designer_list(request):
     designers = DesignerProfile.objects.all()
-    return render(request, 'designer_list.html', {'designers': designers})
+    return render(request, 'portfolio/designer_list.html', {'designers': designers})
 
 def portfolio_form(request):
     if request.method == 'POST':
@@ -39,7 +39,7 @@ def portfolio_form(request):
             profile = form.save(commit=False)
             profile.user = request.user  # Assign the current user
             profile.save()
-            return redirect('/login/')  # Redirect to login after portfolio is saved
+            return redirect('core/login')  # Redirect to login after portfolio is saved
     else:
         form = DesignerProfileForm()
     

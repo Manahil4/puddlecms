@@ -3,6 +3,7 @@ from django.contrib.auth import views as auth_views
 from . import views
 from .forms import LoginForm
 app_name='core'
+
 urlpatterns = [
     path("", views.index, name="index"),
     # This pattern routes requests to the root URL + contact/ ('contact/') to the contact view.

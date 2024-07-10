@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from item.models import Category, Item
 from .forms import SignupForm
-from portfolio.forms import DesignerProfileForm
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -78,7 +77,7 @@ def signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
+            # user.set_password(form.cleaned_data['password'])
             user.save()
             
             if user.is_designer:

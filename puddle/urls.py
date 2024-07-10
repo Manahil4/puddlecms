@@ -20,5 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('Dashboard/', include('Dashboard.urls')),
     path('item/', include('item.urls')),
-    path('portfoli/', include('portfolio.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('portfolio/', include('portfolio.urls')),
+    path('order/', include('order.urls')),  # Ensure the namespace is specified
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

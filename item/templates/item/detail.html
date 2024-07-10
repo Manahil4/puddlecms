@@ -28,6 +28,7 @@
         </p>
         {% endif %}
 
+
         {%if request.user == item.created_by %}
         <div class="mt-6 p-6 bg-white rounded-xl">
 <p>This is your item!</p>
@@ -35,8 +36,15 @@
 <a href="{% url 'item:edit' item.id %}" class="inline-block mt-6 px-6 py-3 text-lg font-semibold bg-teal-500  text-500 rounded-xl">Edit</a>
         
         </div>
-        {%else%}
-        <a href="#" class="inline-block mt-6 px-6 py-3 text-lg font-semibold bg-teal-500 text-500 hover:bg-teal-700 rounded-xl">Contact Seller</a>
+            
+
+        {% elif user.is_authenticated %}
+           {% if not user.profile.is_designer %}
+        <a href="{% url 'order:order_view' item.id %}" class="inline-block mt-6 px-6 py-3 text-lg font-semibold bg-teal-500 text-500 hover:bg-teal-700 rounded-xl">Order Now</a>
+            {%endif%}
+
+        {% else %}
+            <p>OOps Can't place Order Login or signup</p>
         {%endif%}
     </div>
 </div>

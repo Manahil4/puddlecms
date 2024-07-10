@@ -16,7 +16,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # settings.py
-AUTH_USER_MODEL = 'AUTH_USER_MODEL'
+AUTH_USER_MODEL = 'core.CustomUser'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'myitems',
     'Dashboard',
     'portfolio',
+    'order',
     ]
 
 MIDDLEWARE = [

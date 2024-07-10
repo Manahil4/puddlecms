@@ -25,8 +25,8 @@
                 <!-- Link styled as a button for user login -->
                     <a href="{% url 'Dashboard:index' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Dashboard</a>
                     <a href="{%url 'core:logout' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Log out</a>
-          
-                    <a href="{% url 'portfolio:create_or_update_profile' %}" class="btn btn-primary">Create/Update Profile</a>
+{% comment %}           
+                    <a href="{% url 'portfolio:create_or_update_profile' %}" class="btn btn-primary">Create/Update Profile</a> {% endcomment %}
                     <a href="{% url 'portfolio:designer_list' %}" class="btn btn-secondary">View Designers</a>
              
                     <!-- Link to add an item, styled with a hover effect -->
