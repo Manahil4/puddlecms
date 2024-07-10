@@ -6,11 +6,11 @@ from .models import DesignerProfile
 from core.models import CustomUser  # Import CustomUser
 
 @login_required
-def create_profile(request):
+def create_profile(request, profile_id):
     # Check if the user already has a portfolio
     if DesignerProfile.objects.filter(user=request.user).exists():
         # Redirect to profile view or any other page since the portfolio already exists
-        return redirect('portfolio/profile_view', profile_id=request.user.designerprofile.id)
+        return redirect('portfolio/profile_view', profile_id=profile_id)
 
     if request.method == 'POST':
         form = DesignerProfileForm(request.POST, request.FILES)
@@ -18,7 +18,7 @@ def create_profile(request):
             profile = form.save(commit=False)
             profile.user = request.user
             profile.save()
-            return redirect('portfolio/profile_view', profile_id=profile.id)
+            return redirect('portfolio/profile_view.html', profile_id=profile_id)
     else:
         form = DesignerProfileForm()
     
@@ -33,8 +33,9 @@ def designer_list(request):
     return render(request, 'portfolio/designer_list.html', {'designers': designers})
 
 def portfolio_form(request):
+    
     if request.method == 'POST':
-        form = DesignerProfileForm(request.POST, request.FILES)
+        form = DesignerProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             profile = form.save(commit=False)
             profile.user = request.user  # Assign the current user

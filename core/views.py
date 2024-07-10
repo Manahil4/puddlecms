@@ -4,6 +4,10 @@ from .forms import SignupForm
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.utils import timezone
+
+
+from django.contrib.auth.decorators import login_required
 # views.py
 
 # Create your views here.
@@ -20,8 +24,23 @@ def index(request):
         'categories': category_list,
     }
     return render(request, 'core/index.html', context)
-def contact(request):
-    return render(request, 'core/contact.html')
+from .forms import ContactForm
+@login_required
+def contact_view(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+                contact=form.save(commit=False)
+                contact.user = request.user
+                contact.created_at = timezone.now()
+                contact.save()
+                return redirect('core:index')
+        elif 'rollback' in request.POST:
+            return redirect('core:index')
+    else:
+        form = ContactForm()
+    
+    return render(request, 'core/contact.html', {'form': form})
 
 # def signup(request):
 #     if request.method == 'POST':

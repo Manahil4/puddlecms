@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from core.models import CustomUser  # Update this import to your custom user model
+from .models import Contact
+
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
@@ -38,3 +40,10 @@ class SignupForm(UserCreationForm):
     
     is_designer = forms.BooleanField(required=False, label="Are you a designer?")
     
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = [ 'message']
+        widgets = {
+            'message': forms.Textarea(attrs={'class': 'form-input', 'placeholder': 'Your message...', 'rows': 4}),
+        }

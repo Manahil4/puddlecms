@@ -1,7 +1,66 @@
 {% extends 'core/base.html' %}
 {% block title %}
-Contact
+Contact Us | Puddle
 {% endblock %}
 {% block content %}
 <h1>The Contact page</h1>
-{% endblock %}
+
+<!-- templates/core/contact.html -->
+
+        <style>
+            body {
+                background-color: #1a1a1a;
+                color: #fff;
+            }
+            .form-container {
+                background-color: #333;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                max-width: 600px;
+                margin: auto;
+            }
+            .form-input {
+                background-color: #444;
+                border: 1px solid #555;
+                color: #fff;
+                padding: 12px;
+                border-radius: 4px;
+                width: 100%;
+                margin-bottom: 12px;
+            }
+            .form-input::placeholder {
+                color: #999;
+            }
+            .form-button {
+                background-color: #008080;
+                border: none;
+                color: white;
+                padding: 12px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+            .form-button:hover {
+                background-color: #006666;
+            }
+        </style>
+  
+       
+
+        <div class="form-container mt-10">
+            <h2 class="text-2xl font-semibold mb-4">Contact Us</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="mt-4 flex justify-between">
+                    <button type="submit" name="submit" class="form-button">Submit</button>
+                    <button type="submit" name="rollback" class="form-button">Rollback</button>
+                </div>
+            </form>
+        </div>
+        {% endblock %}
