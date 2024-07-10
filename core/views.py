@@ -5,14 +5,15 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.utils import timezone
-
+from .forms import ContactForm
+from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
 # views.py
 
 # Create your views here.
 def index(request):
-    item_list = Item.objects.all()
+    item_list = Item.objects.all().order_by('name')
     category_list = Category.objects.all()
     paginator = Paginator(item_list, 6)  # Show 6 items per page.
 
@@ -22,20 +23,23 @@ def index(request):
     context = {
         'items': page_obj,
         'categories': category_list,
-    }
+        }
     return render(request, 'core/index.html', context)
-from .forms import ContactForm
+
 @login_required
 def contact_view(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-                contact=form.save(commit=False)
-                contact.user = request.user
-                contact.created_at = timezone.now()
-                contact.save()
-                return redirect('core:index')
+            contact=form.save(commit=False)
+            contact.user = request.user
+            contact.created_at = timezone.now()
+            contact.save()
+            messages.success(request,('Your Feedback is Successfully Submitted'))
+            return redirect('core:index')
         elif 'rollback' in request.POST:
+            messages.success(request,('Your Feedback is Aborted'))
+            
             return redirect('core:index')
     else:
         form = ContactForm()
@@ -76,7 +80,7 @@ def logout_u(request):
     messages.success(request,("You were LOGOUT!!!"))
     return redirect('core:index')
 def cat(request):
-    item_list = Item.objects.all()
+    item_list = Item.objects.all().order_by( 'name')
     category_list = Category.objects.all()
     paginator = Paginator(item_list, 6)  # Show 6 items per page.
 
@@ -100,8 +104,11 @@ def signup(request):
             user.save()
             
             if user.is_designer:
-                return redirect("{%'url 'portfolio:portfolio_form'%}")
+                messages.success(request,('Your  Designer Account is Successfully Created'))
+                
+                return redirect("{%'url 'portfolio:create_profile'%}")
             else:
+                messages.success(request,('Your User Account is Successfully Created'))
                 return redirect('/login/')
     else:
         form = SignupForm()

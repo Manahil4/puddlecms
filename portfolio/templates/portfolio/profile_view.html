@@ -1,14 +1,30 @@
 {% extends 'core/base.html' %}
 
+{% block title %}{{ profile.user.username }}'s Profile{% endblock %}
+
 {% block content %}
-  <h2>{{ profile.user.username }}'s Profile</h2>
-  <p>{{ profile.experience }}</p>
-  <p>{{ profile.specialization }}</p>
-  <p>{{ profile.previous_work }}</p>
-  <p>{{ profile.education }}</p>
-  
-  <p>{{ profile.bio }}</p>
-  {% if profile.portfolio_image %}
-    <img src="#" alt="Portfolio Image">
-  {% endif %}
+<div class="content-wrapper p-6 bg-gray-100 max-w-4xl mx-auto">
+    <div class="flex items-start">
+        <div class="flex-shrink-0 mr-6">
+            {% if profile.portfolio_image %}
+                <img src="{{ profile.portfolio_image.url }}" alt="Profile Image" class="w-32 h-32 rounded-full object-cover">
+            {% else %}
+                <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-500">No Image</span>
+                </div>
+            {% endif %}
+        </div>
+        <div>
+            <h1 class="text-3xl font-bold">{{ profile.user.username }}</h1>
+            <p class="text-xl text-gray-600">{{ profile.bio }}</p>
+        </div>
+    </div>
+    <div class="mt-6">
+        <h2 class="text-2xl font-semibold mb-4">Details</h2>
+        <p class="text-lg text-gray-600"><strong>Experience:</strong> {{ profile.experience }}</p>
+        <p class="text-lg text-gray-600"><strong>Specialization:</strong> {{ profile.specialization }}</p>
+        <p class="text-lg text-gray-600"><strong>Previous Work:</strong> {{ profile.previous_work }}</p>
+        <p class="text-lg text-gray-600"><strong>Education:</strong> {{ profile.education }}</p>
+    </div>
+</div>
 {% endblock %}

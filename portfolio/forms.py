@@ -6,12 +6,12 @@ class DesignerProfileForm(forms.ModelForm):
         model = DesignerProfile
         fields = ['experience','specialization','bio', 'previous_work', 'education', 'portfolio_image']
     experience=forms.CharField(widget=forms.Textarea(attrs={
-        'placeholder': 'Your Bio',
+        'placeholder': 'Your experience',
         'class': 'w-full py-4 px-6 rounded-xl'
     }))
     
     specialization=forms.CharField(widget=forms.Textarea(attrs={
-        'placeholder': 'Your Bio',
+        'placeholder': 'Your specialization',
         'class': 'w-full py-4 px-6 rounded-xl'
     }))
     bio = forms.CharField(widget=forms.Textarea(attrs={

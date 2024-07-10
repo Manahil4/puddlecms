@@ -2,6 +2,8 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 from .forms import LoginForm
+from portfolio import views as portfolio_views
+
 app_name='core'
 
 urlpatterns = [
@@ -14,5 +16,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='core/login.html',authentication_form=LoginForm), name='login'),
     path('logout/', views.logout_u, name="logout"),
     path('contact/', views.contact_view, name='contact'),
+    #
 ]
     

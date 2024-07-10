@@ -5,7 +5,7 @@
   {% for profile in profiles %}
     <div>
       <h3><a href="{% url 'portfolio:profile_view' profile.id %}">{{ profile.user.username }}</a></h3>
-      <p>{{ profile.bio|truncatewords:30 }}</p>
+      <p>{{ profile.experience|truncatewords:30 }}{{ profile.specialization }}</p>
       {% if profile.portfolio_image %}
         <img src="#" alt="Portfolio Image" style="width:100px;height:100px;">
       {% endif %}

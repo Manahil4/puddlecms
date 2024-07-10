@@ -2,13 +2,11 @@ from django.urls import path
 from . import views
 app_name='portfolio'
 urlpatterns = [
-    # This pattern routes requests to the root URL + contact/ ('contact/') to the contact view.
-    # Example: http://www.example.com/contact/
-    # 'name="contact"' names this URL pattern as 'contact', allowing it to be referred to by this name elsewhere in the project.
-    path('<int:profile_id>/profile/create/', views.create_profile, name='create_profile'),
-    path('<int:profile_id>/profile', views.profile_view, name='profile_view'),
-    path('designers/', views.designer_list, name='designer_list'),
-    path('portfolioform/', views.portfolio_form, name=" portfolio_form"),
-    ]
-
+    path("",views.index ,name="index"),
+    path('proflie/designerlist', views.designer_list, name='designer_list'),
+    path('profile/<int:profile_id>/', views.profile_view, name='profile_view'),
+    path('profile/create/', views.create_profile, name='create_profile'),
+    path('profile/<int:profile_id>/edit/', views.edit_profile, name='edit_profile'),
+    # Other URLs as needed
+]
     

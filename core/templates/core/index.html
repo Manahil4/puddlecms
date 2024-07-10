@@ -29,9 +29,11 @@
             </div>
         </a>
     </div>
-    {% endfor %}
-    </div>
 
+    {% endfor %}
+    
+    </div>
+    
     <div class="pagination-center">
         {% for num in items.paginator.page_range %}
             {% if items.number == num %}

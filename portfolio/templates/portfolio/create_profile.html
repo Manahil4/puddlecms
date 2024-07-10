@@ -1,10 +1,14 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-  <h2>Create or Update Profile</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-  </form>
+<div class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md mt-8">
+    <h2 class="text-2xl font-semibold mb-6 text-center">Create or Update Profile</h2>
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="text-center">
+            <button type="submit" class="px-6 py-3 bg-teal-500 text-white font-semibold rounded-lg shadow-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-400">Save</button>
+        </div>
+    </form>
+</div>
 {% endblock %}
